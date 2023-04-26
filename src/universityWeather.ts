@@ -7,7 +7,21 @@ interface AverageTemperatureResults {
   [key: string]: number;
 }
 
-// This function should take in a query string and return a Promise that fulfils with an object that contains the total average and individual average temperatures of all universities in the given universityQuery string. The optionally provided transformName function should be applied to each university name before it is transformed into a GeoCoord. The total average should be in a field called totalAverage and the individual averages should use the name of the university as a key.
+// Write a function with, inside of ./src/universityWeather.ts, the following type signature:
+
+// export interface AverageTemperatureResults {
+//   totalAverage: number;
+//   [key: string]: number;
+// }
+
+// export function fetchUniversityWeather(
+//   universityQuery: string,
+//   transformName?: (s: string) => string
+// ): Promise<AverageTemperatureResults> {
+//   // TODO
+// }
+
+// This function should take in a query string and return a Promise that fulfils with an object that contains the total average and individual average temperatures of all universities in the given universityQuery string. The optionally provided transformName function should be applied to each university name before it is transformed into a GeoCoord. The total average should be in a field called totalAverage and the individual averages should use the name of the university as a key. The keys should be the original, untransformed, names.
 
 // If there are no matching universities you should reject with an error:
 
@@ -27,23 +41,20 @@ export function fetchUniversityWeather(
   transformName?: (s: string) => string
 ): Promise<AverageTemperatureResults> {
   // TODO
-  // return fetchUniversities(universityQuery)
-  //   .then(universities => Promise.all(universities.map(university => fetchGeoCoord(transformName ? transformName(university) : university))))
-  //   .then(coords => Promise.all(coords.map(coord => fetchCurrentTemperature(coord))))
-  //   .then(temps => {
-  //     const averages: AverageTemperatureResults = {
-  //       totalAverage: 0
-  //     };
-  //     temps.forEach((temp, index) => {
-  //       const average = temp.temperature_2m.reduce((a, b) => a + b, 0) / temp.temperature_2m.length;
-  //       averages[universityQuery[index]] = average;
-  //       averages.totalAverage += average;
-  //     });
-  //     averages.totalAverage /= temps.length;
-  //     return averages;
-  //   }
-  // );
-  return Promise.reject(new Error("No results found for query."));
+  return fetchUniversities(universityQuery)
+    .then(universities => Promise.all(universities.map(university => fetchGeoCoord(university))))
+    .then(coords => Promise.all(coords.map(coord => fetchCurrentTemperature(coord))))
+    .then(temps => {
+      const averages: AverageTemperatureResults = { totalAverage: 0 };
+      const totalTemps = temps.reduce((acc, temp) => {
+        const average = temp.temperature_2m.reduce((acc, temp) => acc + temp, 0) / temp.temperature_2m.length;
+        averages[temp.time[0]] = average;
+        return acc + average;
+      }, 0);
+      averages.totalAverage = totalTemps / temps.length;
+      return averages;
+    }
+  );
 }
 
 export function fetchUMassWeather(): Promise<AverageTemperatureResults> {
@@ -53,5 +64,5 @@ export function fetchUMassWeather(): Promise<AverageTemperatureResults> {
 
 export function fetchUCalWeather(): Promise<AverageTemperatureResults> {
   // TODO
-  return fetchUniversityWeather('University of California' );
+  return fetchUniversityWeather('University of California');
 }

@@ -2,7 +2,7 @@ import { fetchJSON } from "../include/fetchJSON.js";
 
 export function fetchUniversities(query: string): Promise<string[]> {
   // TODO
-  return fetchJSON(`http://universities.hipolabs.com/search?q=${query}`)
+  return fetchJSON(`http://universities.hipolabs.com/search?name=${query}`)
   .then(json =>
     Array.isArray(json)
       ? Promise.resolve(json)
