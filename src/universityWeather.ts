@@ -27,22 +27,23 @@ export function fetchUniversityWeather(
   transformName?: (s: string) => string
 ): Promise<AverageTemperatureResults> {
   // TODO
-  return fetchUniversities(universityQuery)
-    .then(universities => Promise.all(universities.map(university => fetchGeoCoord(transformName ? transformName(university) : university))))
-    .then(coords => Promise.all(coords.map(coord => fetchCurrentTemperature(coord))))
-    .then(temps => {
-      const averages: AverageTemperatureResults = {
-        totalAverage: 0
-      };
-      temps.forEach((temp, index) => {
-        const average = temp.temperature_2m.reduce((a, b) => a + b, 0) / temp.temperature_2m.length;
-        averages[universityQuery[index]] = average;
-        averages.totalAverage += average;
-      });
-      averages.totalAverage /= temps.length;
-      return averages;
-    }
-  );
+  // return fetchUniversities(universityQuery)
+  //   .then(universities => Promise.all(universities.map(university => fetchGeoCoord(transformName ? transformName(university) : university))))
+  //   .then(coords => Promise.all(coords.map(coord => fetchCurrentTemperature(coord))))
+  //   .then(temps => {
+  //     const averages: AverageTemperatureResults = {
+  //       totalAverage: 0
+  //     };
+  //     temps.forEach((temp, index) => {
+  //       const average = temp.temperature_2m.reduce((a, b) => a + b, 0) / temp.temperature_2m.length;
+  //       averages[universityQuery[index]] = average;
+  //       averages.totalAverage += average;
+  //     });
+  //     averages.totalAverage /= temps.length;
+  //     return averages;
+  //   }
+  // );
+  return Promise.reject(new Error("No results found for query."));
 }
 
 export function fetchUMassWeather(): Promise<AverageTemperatureResults> {
