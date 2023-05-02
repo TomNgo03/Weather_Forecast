@@ -1,6 +1,13 @@
 import { fetchJSON } from "../include/fetchJSON.js";
 import { GeoCoord } from "./fetchGeoCoord.js";
 
+interface APIResponse {
+  hourly: {
+    time: string[];
+    temperature_2m: number[];
+  };
+}
+
 interface TemperatureReading {
   time: string[];
   temperature_2m: number[];
@@ -11,7 +18,7 @@ export function fetchCurrentTemperature(coords: GeoCoord): Promise<TemperatureRe
   return fetchJSON(
     `https://api.open-meteo.com/v1/forecast?latitude=${coords.lat}&longitude=${coords.lon}&hourly=temperature_2m&temperature_unit=fahrenheit`
   )
-    .then(json =>
+    .then((json: APIResponse) =>
       Array.isArray(json.hourly.time) &&
       json.hourly.time.length > 0 &&
       Array.isArray(json.hourly.temperature_2m) &&
@@ -24,3 +31,4 @@ export function fetchCurrentTemperature(coords: GeoCoord): Promise<TemperatureRe
       temperature_2m: data.temperature_2m,
     }));
 }
+
