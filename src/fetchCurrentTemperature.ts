@@ -31,4 +31,3 @@ export function fetchCurrentTemperature(coords: GeoCoord): Promise<TemperatureRe
       temperature_2m: data.temperature_2m,
     }));
 }
-

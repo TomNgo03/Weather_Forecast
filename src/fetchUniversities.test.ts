@@ -1,6 +1,7 @@
 import assert from "assert";
 import { fetchUniversities } from "./fetchUniversities.js";
 
+
 describe("fetchUniversities", () => {
   it("follows type specification", () => {
     const promise = fetchUniversities("University of Massachusetts at Amherst");
