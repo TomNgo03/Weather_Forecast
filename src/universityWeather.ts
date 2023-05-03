@@ -60,3 +60,10 @@ export function fetchUCalWeather(): Promise<AverageTemperatureResults> {
   // TODO
   return fetchUniversityWeather("University of California");
 }
+
+// export function fetchUTexasWeather(): Promise<AverageTemperatureResults> {
+//   // TODO
+//   return fetchUniversityWeather("University of Texas");
+// }
+
+
